@@ -1,78 +1,100 @@
+
+import json
 import random
-level = input("choose level:\n1:EASY\n2:MEDIUM\n3:HARD\nEnter Option:  ")
+import os
+import sys
+details={}
 
-if(level=='1'):
-    print("Difficulty: EASY")
-    count=0
-    luckynumber = random.randint(1,10)
-    while(True):
-        guess=int(input('Choose a number between 1 and 10...You have 6 trials '))
+details['staff']=[]
 
-        if(guess>0 and guess<=10):
+details['staff'].append( {
+    'username':'promise',
+    'password':'1234',
+    'email':'pro@gmail.com',
+    'fullname':'promise orevaoghene'
+})
+details['staff'].append( {
+    'username':'hopey',
+    'password':'1234',
+    'email':'okelue@gmail.com',
+    'fullname':'Okelue Hope'
+})
+username=[]
+password=[]
+with open('staff.txt','w') as output:
+    json.dump(details, output)
 
-            if(guess==luckynumber):
-                print('You Won the game')
-                break
+with open('staff.txt') as json_file:
+    data= json.load(json_file)
+    for x in data['staff']:
+        username.append(x['username'])
+        password.append(x['password'])
+    option = input("1. Staff Login\n2. Exit\n")
+
+    if (option == "1"):
+        while (True):
+            user = input("Username: ")
+            psw = input("Password: ")
+
+            if (user in username and psw in password):
+                session=[user,psw]
+                open('session.txt','w')
+                while(True):
+                    option2 = input("1. Create New Bank Account\n2. Check Account Details\n3. Logout\n")
+
+                    if(option2=="1"):
+                        accountName = input("Account name: ")
+                        balance = input("Opening Balance: ")
+                        accountType = input("Account Type: ")
+                        accountEmail = input("Account email: ")
+                        accountNo = random.randint(0000000000,9999999999)
+
+                        data = {}
+
+                        data['account'] = []
+
+                        data['account'].append({
+                            'accountName': accountName,
+                            'balance': balance,
+                            'accountType': accountType,
+                            'accountEmail': accountEmail,
+                            'accountNo':accountNo
+                        })
+                        print("Account Created: "+ str(accountNo))
+                        with open('customer.txt', 'w') as output:
+                            json.dump(data, output)
+                        continue
+
+
+                    elif(option2=="2"):
+                        with open('customer.txt') as json_file:
+                            data = json.load(json_file)
+                            accno=input("Enter Account Number: ")
+                            for y in data['account']:
+                                accN =y['accountNo']
+                            if(int(accno)==accN):
+                                for x in data['account']:
+                                    print("accountName: "+x['accountName'])
+                                    print("balance: " + x['balance'])
+                                    print("Type: " + x['accountType'])
+                                    print("Email: " + x['accountEmail'])
+                                    print("Account No: " + str(x['accountNo'])+"\n")
+                            else:
+                                print("Account No does not exists\n")
+                        continue
+                    elif(option2 == "3"):
+                        print("Logged Out")
+                        os.remove("session.txt")
+                        break
+                    else:
+                        continue
             else:
+                print("Wrong Username or Password")
+                continue
 
-                count+=1
-                if(count>=6):
-                    print('Lost.... Game over')
-                    break
-                else:
-                    print('Lost.... Try Again\nNumber of trials: '+str(count)+"\n")
-                    continue
-        else:
-            print("Your guess is out of range!!!\n")
-            continue
 
-elif(level=='2'):
-    print("Difficulty: MEDIUM")
-    count=0
-    luckynumber = random.randint(1,20)
-    while(True):
-        guess=int(input('Choose a number between 1 and 20...You have 4 trials '))
-
-        if(guess>0 and guess<=20):
-
-            if(guess==luckynumber):
-                print('You Won the game')
-                break
-            else:
-
-                count+=1
-                if(count>=4):
-                    print('Lost.... Game over')
-                    break
-                else:
-                    print('Lost.... Try Again\nNumber of trials: '+str(count)+"\n")
-                    continue
-        else:
-            print("Your guess is out of range!!!\n")
-            continue
-elif (level == '3'):
-    print("Difficulty: HARD")
-    count=0
-    luckynumber = random.randint(1,50)
-    while(True):
-        guess=int(input('Choose a number between 1 and 10...You have 6 trials '))
-
-        if(guess>0 and guess<=50):
-
-            if(guess==luckynumber):
-                print('You Won the game')
-                break
-            else:
-
-                count+=1
-                if(count>=3):
-                    print('Lost.... Game over')
-                    break
-                else:
-                    print('Lost.... Try Again\nNumber of trials: '+str(count)+"\n")
-                    continue
-        else:
-            print("Your guess is out of range!!!\n")
-            continue
-else:
-    print("Start Program again")
+    elif(option=="2"):
+        print("Application Closing")
+        sys.exit()
+    else:
+        sys.exit()
